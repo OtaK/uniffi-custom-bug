@@ -4,7 +4,7 @@
 
 UniFFI tends to create duplicate declarations for custom types that use the new `bytes` UDL type AND appear in function parameters.
 
-In example for kotlin the types that are emitted are both `ByteArray` (correct) and `List<UByte>` (incorrect) - same goes for Swift's `Data` / `[UInt8]`, Python's `bytes` / `typing.List[int]`.
+In example for kotlin the types that are emitted are both `ByteArray` (correct) and `List<UByte>` (incorrect) - same goes for Swift's `Data` / `[UInt8]`, Python's `bytes` / `typing.List[int]`.)
 
 This leads me to think that the issue is not in the bindings generation but above that, probably in type disambiguation.
 
@@ -13,7 +13,9 @@ This leads me to think that the issue is not in the bindings generation but abov
 
 ```
 $ cargo build --release
-$ for lang in python swift kotlin; do cargo run --features uniffi/cli --bin uniffi-bindgen -- generate --language $lang --out-dir ./bindings/$lang --library target/release/libuniffi_custom_bug.so
+$ cargo run --features uniffi/cli --bin uniffi-bindgen -- generate --language kotlin --out-dir ./bindings/kt --library target/release/libuniffi_custom_bug.so
+$ cargo run --features uniffi/cli --bin uniffi-bindgen -- generate --language python --out-dir ./bindings/python --library target/release/libuniffi_custom_bug.so
+$ cargo run --features uniffi/cli --bin uniffi-bindgen -- generate --language swift --out-dir ./bindings/swift --library target/release/libuniffi_custom_bug.so
 ```
 
 Then check the bindings folder for faulty types declarations (search for `CustomType`).
@@ -21,7 +23,7 @@ Then check the bindings folder for faulty types declarations (search for `Custom
 ### Examples of double declarations
 
 <details>
-    <summary>#### Kotlin</summary>
+    <summary>Kotlin</summary>
 
 ```kotlin
 // ./bindings/kit/uniffi/UniffiCustomBug/UniffiCustomBug.kt:477
@@ -46,7 +48,7 @@ public typealias FfiConverterTypeCustomType = FfiConverterSequenceUByte
 </details>
 
 <details>
-    <summary>#### Swift</summary>
+    <summary>Swift</summary>
 
 ```swift
 // ./bindings/swift/UniffiCustomBug.swift:349
@@ -104,7 +106,7 @@ public struct FfiConverterTypeCustomType: FfiConverter {
 </details>
 
 <details>
-    <summary>#### Python</summary>
+    <summary>Python</summary>
 
 ```python
 # ./bindings/python/UniffiCustomBug.py:621

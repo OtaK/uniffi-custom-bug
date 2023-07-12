@@ -1,0 +1,21 @@
+[package]
+name = "uniffi-custom-bug"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "uniffi_custom_bug"
+crate-type = ["lib", "cdylib"]
+
+[[bin]]
+name = "uniffi-bindgen"
+path = "uniffi-bindgen.rs"
+required-features = ["uniffi/cli"]
+
+[dependencies.uniffi]
+version = "0.24"
+
+[build-dependencies.uniffi]
+version = "0.24"
+features = ["build", "bindgen"]
+
